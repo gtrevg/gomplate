@@ -148,3 +148,13 @@ func TestCustomDelim(t *testing.T) {
 	}
 	assert.Equal(t, "hi", testTemplate(g, `[print "hi"]`))
 }
+
+func TestRunTemplates(t *testing.T) {
+	defer func() { Stdout = os.Stdout }()
+	buf := &bytes.Buffer{}
+	Stdout = &nopWCloser{buf}
+	config := &Config{Input: "foo"}
+	err := RunTemplates(config)
+	assert.NoError(t, err)
+	assert.Equal(t, "foo", buf.String())
+}
